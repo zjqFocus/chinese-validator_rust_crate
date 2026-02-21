@@ -11,7 +11,7 @@ repository = "https://github.com/zjqFocus/chinese-validator_rust_crate.git"
 homepage = "https://github.com/zjqFocus/chinese-validator_rust_crate"
 documentation = "https://docs.rs/chinese-validator-core" 
 
-keywords = ["chinese", "validation", "address","id-card", "license_plate","name","phone", "postal-code", "qq","username"]
+keywords = ["chinese", "validation","id-card", "license_plate", "postal-code"]
 categories = ["data-structures", "text-processing"]
 readme = "../README.md"
 authors = ["zjqFocus <540007690@qq.com>"] 
