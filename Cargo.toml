@@ -1,0 +1,13 @@
+[workspace]
+members = [
+    "chinese-validator",
+    "chinese-validator-derive",
+    "chinese-validator-core",
+]
+
+resolver = "2"  # 添加这行
+
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"

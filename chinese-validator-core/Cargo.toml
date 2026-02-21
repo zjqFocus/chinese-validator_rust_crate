@@ -1,0 +1,21 @@
+[package]
+name = "chinese-validator-core"
+version.workspace = true
+edition.workspace = true
+
+description = "Core validation logic for Chinese data (address,id_card, license_plate,name, phone, postal_code,qq,username,etc.)"
+license = "MIT"
+
+
+repository = "https://github.com/zjqFocus/chinese-validator_rust_crate.git" 
+homepage = "https://github.com/zjqFocus/chinese-validator_rust_crate"
+documentation = "https://docs.rs/chinese-validator-core"
+
+keywords = ["chinese", "validation", "address","id-card", "license_plate","name","phone", "postal-code", "qq","username"]
+categories = ["data-structures", "text-processing"]
+readme = "../README.md" 
+authors = ["zjqFocus <540007690@qq.com>"]  # 可选
+
+[dependencies]
+thiserror = "1.0"
+regex = "1.10"
