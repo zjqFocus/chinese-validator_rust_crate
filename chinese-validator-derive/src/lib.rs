@@ -1,8 +1,7 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, Data, DeriveInput, Fields, Path}; // 删除 Attribute
+use syn::{parse_macro_input, Data, DeriveInput, Fields, Path};
 
-// ... 其余代码不变
 #[proc_macro_derive(ChineseValidate, attributes(chinese))]
 pub fn chinese_validate_derive(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
@@ -32,6 +31,7 @@ pub fn chinese_validate_derive(input: TokenStream) -> TokenStream {
         _ => vec![],
     };
 
+    // 生成 validate 方法的代码（遇到第一个错误就返回）
     let validate_impls = validate_fields.iter().map(|(field_name, rule)| {
         let field_str = field_name.to_string();
         match rule.as_str() {
@@ -39,6 +39,162 @@ pub fn chinese_validate_derive(input: TokenStream) -> TokenStream {
                 quote! {
                     if !::chinese_validator_core::validators::validate_cn_phone(&self.#field_name) {
                         return Err(::chinese_validator_core::ValidationError::InvalidField(#field_str.to_string()));
+                    }
+                }
+            }
+            "name" => {
+                quote! {
+                    // 默认不允许匿名（传入 false）
+                    if !::chinese_validator_core::validators::validate_chinese_name(&self.#field_name, false) {
+                        return Err(::chinese_validator_core::ValidationError::InvalidField(#field_str.to_string()));
+                    }
+                }
+            }
+            "id_card" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_cn_id_card(&self.#field_name) {
+                        return Err(::chinese_validator_core::ValidationError::InvalidField(#field_str.to_string()));
+                    }
+                }
+            }
+            "email" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_email(&self.#field_name) {
+                        return Err(::chinese_validator_core::ValidationError::InvalidField(#field_str.to_string()));
+                    }
+                }
+            }
+            "nickname" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_nickname(&self.#field_name) {
+                        return Err(::chinese_validator_core::ValidationError::InvalidField(#field_str.to_string()));
+                    }
+                }
+            }
+            "anonymous_name" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_anonymous_name(&self.#field_name) {
+                        return Err(::chinese_validator_core::ValidationError::InvalidField(#field_str.to_string()));
+                    }
+                }
+            }
+            "standard_email" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_standard_email(&self.#field_name) {
+                        return Err(::chinese_validator_core::ValidationError::InvalidField(#field_str.to_string()));
+                    }
+                }
+            }
+            "address" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_address(&self.#field_name) {
+                        return Err(::chinese_validator_core::ValidationError::InvalidField(#field_str.to_string()));
+                    }
+                }
+            }
+            "postal_code" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_postal_code(&self.#field_name) {
+                        return Err(::chinese_validator_core::ValidationError::InvalidField(#field_str.to_string()));
+                    }
+                }
+            }
+            "license_plate" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_license_plate(&self.#field_name) {
+                        return Err(::chinese_validator_core::ValidationError::InvalidField(#field_str.to_string()));
+                    }
+                }
+            }
+            "qq" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_qq(&self.#field_name) {
+                        return Err(::chinese_validator_core::ValidationError::InvalidField(#field_str.to_string()));
+                    }
+                }
+            }
+            _ => quote! {}
+        }
+    });
+
+    // 生成 validate_all 方法的代码（收集所有错误）
+    let validate_all_impls = validate_fields.iter().map(|(field_name, rule)| {
+        let field_str = field_name.to_string();
+        match rule.as_str() {
+            "phone" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_cn_phone(&self.#field_name) {
+                        errors.push(#field_str.to_string());
+                    }
+                }
+            }
+            "name" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_chinese_name(&self.#field_name, false) {
+                        errors.push(#field_str.to_string());
+                    }
+                }
+            }
+            "id_card" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_cn_id_card(&self.#field_name) {
+                        errors.push(#field_str.to_string());
+                    }
+                }
+            }
+            "email" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_email(&self.#field_name) {
+                        errors.push(#field_str.to_string());
+                    }
+                }
+            }
+            "nickname" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_nickname(&self.#field_name) {
+                        errors.push(#field_str.to_string());
+                    }
+                }
+            }
+            "anonymous_name" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_anonymous_name(&self.#field_name) {
+                        errors.push(#field_str.to_string());
+                    }
+                }
+            }
+            "standard_email" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_standard_email(&self.#field_name) {
+                        errors.push(#field_str.to_string());
+                    }
+                }
+            }
+            "address" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_address(&self.#field_name) {
+                        errors.push(#field_str.to_string());
+                    }
+                }
+            }
+            "postal_code" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_postal_code(&self.#field_name) {
+                        errors.push(#field_str.to_string());
+                    }
+                }
+            }
+            "license_plate" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_license_plate(&self.#field_name) {
+                        errors.push(#field_str.to_string());
+                    }
+                }
+            }
+            "qq" => {
+                quote! {
+                    if !::chinese_validator_core::validators::validate_qq(&self.#field_name) {
+                        errors.push(#field_str.to_string());
                     }
                 }
             }
@@ -51,6 +207,17 @@ pub fn chinese_validate_derive(input: TokenStream) -> TokenStream {
             pub fn validate(&self) -> Result<(), ::chinese_validator_core::ValidationError> {
                 #(#validate_impls)*
                 Ok(())
+            }
+
+            pub fn validate_all(&self) -> Result<(), ::chinese_validator_core::ValidationError> {
+                let mut errors = Vec::new();
+                #(#validate_all_impls)*
+                
+                if errors.is_empty() {
+                    Ok(())
+                } else {
+                    Err(::chinese_validator_core::ValidationError::MultipleFields(errors))
+                }
             }
         }
     };
